@@ -1,6 +1,5 @@
 package com.jacklavigne;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,21 +34,18 @@ public class Day3 {
         return Integer.parseInt(gammaRate.toString(), 2) * Integer.parseInt(epsilonRate.toString(), 2);
     }
 
-    public static List<String> test(List<String> input, int i, boolean mostCommon) {
+    public static int filterRating(List<String> input, int i, boolean mostCommon) {
         int totalZero = (int) input.stream().filter(line -> line.charAt(i) == '0').count();
         int totalOne = input.size() - totalZero;
-        List<String> filtered = input.stream().filter(line -> ((mostCommon ? totalOne >= totalZero : totalZero < totalOne) ? line.charAt(i) == '1' : line.charAt(i) == '0')).collect(Collectors.toList()); // TODO: fix the least common issue
+        List<String> filtered = input.stream().filter(line -> (mostCommon == (totalOne >= totalZero)) ? line.charAt(i) == '1' : line.charAt(i) == '0').collect(Collectors.toList()); // TODO: fix the least common issue
         if (filtered.size() == 1) {
-            return filtered;
+            return Integer.parseInt(filtered.get(0), 2);
         }
-        return test(filtered, i + 1, mostCommon);
+        return filterRating(filtered, i + 1, mostCommon);
     }
 
     public static int partTwo(List<String> input) {
-        List<String> testList = test(input, 0, false);
-        System.out.println(testList);
-
-        return 0;
+        return filterRating(input, 0, true) * filterRating(input, 0, false);
 
     }
 }
